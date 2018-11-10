@@ -44,14 +44,14 @@ namespace JitterOpenGLDemo
 {
     public sealed class Conversion
     {
-        public static float[] ToFloat(JVector vector)
+        public static double[] Todouble(JVector vector)
         {
-            return new float[4] { vector.X, vector.Y, vector.Z, 0.0f };
+            return new double[4] { vector.X, vector.Y, vector.Z, 0.0f };
         }
 
-        public static float[] ToFloat(JMatrix matrix)
+        public static double[] Todouble(JMatrix matrix)
         {
-            return new float[12] { matrix.M11, matrix.M21, matrix.M31, 0.0f,
+            return new double[12] { matrix.M11, matrix.M21, matrix.M31, 0.0f,
                                    matrix.M12, matrix.M22, matrix.M32, 0.0f,
                                    matrix.M13, matrix.M23, matrix.M33, 1.0f };
         }
@@ -65,28 +65,28 @@ namespace JitterOpenGLDemo
 
         private const double DEG_TO_RAD = Math.PI / 180.0;
         // light vector. LIGHTZ is implicitly 1
-        private const float LIGHTX = 1.0f;
-        private const float LIGHTY = 0.4f;
+        private const double LIGHTX = 1.0f;
+        private const double LIGHTY = 0.4f;
 
         // ground color for when there's no texture
-        private const float GROUND_R = 0.5f;
-        private const float GROUND_G = 0.5f;
-        private const float GROUND_B = 0.3f;
+        private const double GROUND_R = 0.5f;
+        private const double GROUND_G = 0.5f;
+        private const double GROUND_B = 0.3f;
 
         // ground and sky
-        private const float SHADOW_INTENSITY = 0.65f;
+        private const double SHADOW_INTENSITY = 0.65f;
 
-        private const float ground_scale = 1.0f / 1.0f;	// ground texture scale (1/size)
-        private const float ground_ofsx = 0.5f;		// offset of ground texture
-        private const float ground_ofsy = 0.5f;
-        private const float sky_scale = 1.0f / 4.0f;	// sky texture scale (1/size)
-        private const float sky_height = 1.0f;		// sky height above viewpoint
+        private const double ground_scale = 1.0f / 1.0f;	// ground texture scale (1/size)
+        private const double ground_ofsx = 0.5f;		// offset of ground texture
+        private const double ground_ofsy = 0.5f;
+        private const double sky_scale = 1.0f / 4.0f;	// sky texture scale (1/size)
+        private const double sky_height = 1.0f;		// sky height above viewpoint
 
         protected double fieldOfView = 45.0f;
         protected double nearClipDistance = 0.1f;
         protected double farClipDistance = 5000.0f;
 
-        private float offset = 0.0f;
+        private double offset = 0.0f;
 
         // the current state:
         //    0 = uninitialized
@@ -105,27 +105,27 @@ namespace JitterOpenGLDemo
 
         private Texture[] texture = new Texture[5 + 1]; // +1 since index 0 is not used
 
-        private float[] color = { 0, 0, 0, 0 };	// current r,g,b,alpha color
+        private double[] color = { 0, 0, 0, 0 };	// current r,g,b,alpha color
         private DS_TEXTURE_NUMBER tnum = DS_TEXTURE_NUMBER.DS_NONE;
 
-        private float[] s_params_SDM;
-        private float[] t_params_SDM;
+        private double[] s_params_SDM;
+        private double[] t_params_SDM;
 
-        private float[] light_ambient2;
-        private float[] light_diffuse2;
-        private float[] light_specular2;
+        private double[] light_ambient2;
+        private double[] light_diffuse2;
+        private double[] light_specular2;
 
-        private float[] light_position = new float[] { LIGHTX, LIGHTY, 1.0f, 0.0f };
-        private float[] light_ambient = new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
-        private float[] light_diffuse = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-        private float[] light_specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+        private double[] light_position = new double[] { LIGHTX, LIGHTY, 1.0f, 0.0f };
+        private double[] light_ambient = new double[] { 0.5f, 0.5f, 0.5f, 1.0f };
+        private double[] light_diffuse = new double[] { 1.0f, 1.0f, 1.0f, 1.0f };
+        private double[] light_specular = new double[] { 1.0f, 1.0f, 1.0f, 1.0f };
 
-        private readonly float[] s_params_SSDM;
-        private readonly float[] t_params_SSDM;
+        private readonly double[] s_params_SSDM;
+        private readonly double[] t_params_SSDM;
 
         // current camera position and orientation
-        private float[] view_xyz = new float[3];	// position x,y,z
-        private float[] view_hpr = new float[3];	// heading, pitch, roll (degrees)
+        private double[] view_xyz = new double[3];	// position x,y,z
+        private double[] view_hpr = new double[3];	// heading, pitch, roll (degrees)
 
         #region Constructores
 
@@ -221,11 +221,11 @@ namespace JitterOpenGLDemo
                         int major, int minor, GraphicsContextFlags flags, IGraphicsContext sharedContext)
             : base(width, height, mode, title, options, device, major, minor, flags, sharedContext)
         {
-            s_params_SDM = new float[] { 1.0f, 1.0f, 0.0f, 1 };
-            t_params_SDM = new float[] { 0.817f, -0.817f, 0.817f, 1 };
+            s_params_SDM = new double[] { 1.0f, 1.0f, 0.0f, 1 };
+            t_params_SDM = new double[] { 0.817f, -0.817f, 0.817f, 1 };
 
-            s_params_SSDM = new float[] { ground_scale, 0, 0, ground_ofsx };
-            t_params_SSDM = new float[] { 0, ground_scale, 0, ground_ofsy };
+            s_params_SSDM = new double[] { ground_scale, 0, 0, ground_ofsx };
+            t_params_SSDM = new double[] { 0, ground_scale, 0, ground_ofsy };
 
             Mouse.ButtonDown += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonDown);
             Mouse.ButtonUp += new EventHandler<OpenTK.Input.MouseButtonEventArgs>(Mouse_ButtonUp);
@@ -363,9 +363,9 @@ namespace JitterOpenGLDemo
 
         #endregion OnXXX of GameWindow
 
-        private void normalizeVector3(float[] v)//[3])
+        private void normalizeVector3(double[] v)//[3])
         {
-            float len = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
+            double len = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
             if (len <= 0.0f)
             {
                 v[0] = 1;
@@ -374,7 +374,7 @@ namespace JitterOpenGLDemo
             }
             else
             {
-                len = 1.0f / (float)Math.Sqrt(len);
+                len = 1.0f / (double)Math.Sqrt(len);
                 v[0] *= len;
                 v[1] *= len;
                 v[2] *= len;
@@ -435,22 +435,22 @@ namespace JitterOpenGLDemo
         }
         void dsMotion(int mode, int deltax, int deltay)
         {
-            float side = 0.01f * (float)deltax;
-            float fwd = (mode == 4) ? (0.01f * (float)deltay) : 0.0f;
-            float s = (float)Math.Sin(view_hpr[0] * DEG_TO_RAD);
-            float c = (float)Math.Cos(view_hpr[0] * DEG_TO_RAD);
+            double side = 0.01f * (double)deltax;
+            double fwd = (mode == 4) ? (0.01f * (double)deltay) : 0.0f;
+            double s = (double)Math.Sin(view_hpr[0] * DEG_TO_RAD);
+            double c = (double)Math.Cos(view_hpr[0] * DEG_TO_RAD);
 
             if (mode == 1)
             {
-                view_hpr[0] += (float)(deltax) * -0.5f;
-                view_hpr[1] += (float)(deltay) * -0.5f;
+                view_hpr[0] += (double)(deltax) * -0.5f;
+                view_hpr[1] += (double)(deltay) * -0.5f;
             }
             else
             {
                 view_xyz[0] += -s * side + c * fwd;
                 view_xyz[1] += c * side + s * fwd;
                 if (mode == 2 || mode == 5)
-                    view_xyz[2] += 0.01f * (float)(deltay);
+                    view_xyz[2] += 0.01f * (double)(deltay);
             }
             wrapCameraAngles();
         }
@@ -485,26 +485,26 @@ namespace JitterOpenGLDemo
             GL.Viewport(0, 0, width, height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            float vnear = 0.1f;
-            float vfar = 1000.0f;
-            float k = 0.8f;     // view scale, 1 = +/- 45 degrees
+            double vnear = 0.1f;
+            double vfar = 1000.0f;
+            double k = 0.8f;     // view scale, 1 = +/- 45 degrees
             if (width >= height)
             {
-                float k2 = (float)height / (float)width;
+                double k2 = (double)height / (double)width;
                 GL.Frustum(-vnear * k, vnear * k, -vnear * k * k2, vnear * k * k2, vnear, vfar);
             }
             else
             {
-                float k2 = (float)width / (float)height;
+                double k2 = (double)width / (double)height;
                 GL.Frustum(-vnear * k * k2, vnear * k * k2, -vnear * k, vnear * k, vnear, vfar);
             }
 
             // setup lights. it makes a difference whether this is done in the
             // GL_PROJECTION matrix mode (lights are scene relative) or the
             // GL_MODELVIEW matrix mode (lights are camera relative, bad!).
-            //		static GLfloat light_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
-            //		static GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-            //		static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+            //		static GLdouble light_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
+            //		static GLdouble light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+            //		static GLdouble light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
             GL.Light(LightName.Light0, LightParameter.Ambient, light_ambient);
             GL.Light(LightName.Light0, LightParameter.Diffuse, light_diffuse);
             GL.Light(LightName.Light0, LightParameter.Specular, light_specular);
@@ -516,10 +516,10 @@ namespace JitterOpenGLDemo
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // snapshot camera position (in MS Windows it is changed by the GUI thread)
-            float[] view2_xyz = (float[])view_xyz.Clone();
-            float[] view2_hpr = (float[])view_hpr.Clone();
-            //		memcpy (view2_xyz,view_xyz);//,sizeof(float)*3);
-            //		memcpy (view2_hpr,view_hpr);//,sizeof(float)*3);
+            double[] view2_xyz = (double[])view_xyz.Clone();
+            double[] view2_hpr = (double[])view_hpr.Clone();
+            //		memcpy (view2_xyz,view_xyz);//,sizeof(double)*3);
+            //		memcpy (view2_hpr,view_hpr);//,sizeof(double)*3);
 
             // go to GL_MODELVIEW matrix mode and set the camera
             GL.MatrixMode(MatrixMode.Modelview);
@@ -528,7 +528,7 @@ namespace JitterOpenGLDemo
                     view2_hpr[0], view2_hpr[1], view2_hpr[2]);
 
             // set the light position (for some reason we have to do this in model view.
-            //		static GLfloat light_position[] = { LIGHTX, LIGHTY, 1.0, 0.0 };
+            //		static GLdouble light_position[] = { LIGHTX, LIGHTY, 1.0, 0.0 };
             GL.Light(LightName.Light0, LightParameter.Position, light_position);
 
             // draw the background (ground, sky etc)
@@ -571,14 +571,14 @@ namespace JitterOpenGLDemo
                 for (int j = -1; j <= 1; j++)
                 {
                     GL.PushMatrix();
-                    GL.Translate((float)i, (float)j, (float)0);
+                    GL.Translate((double)i, (double)j, (double)0);
                     if (i == 1 && j == 0)
                         setColor(1.0f, 0, 0, 1.0f);
                     else if (i == 0 && j == 1)
                         setColor(0, 0, 1.0f, 1.0f);
                     else
                         setColor(1.0f, 1.0f, 0, 1.0f);
-                    float k = 0.03f;
+                    double k = 0.03f;
                     GL.Begin(BeginMode.TriangleFan);
                     GL.Normal3(0, -1.0f, 1.0f); // GL.Normal3(0, -1, 1) esto no funciona
                     GL.Vertex3(0, 0, k);
@@ -616,7 +616,7 @@ namespace JitterOpenGLDemo
 
             // ground fog seems to cause problems with TNT2 under windows
             /*
-            GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1};
+            GLdouble fogColor[4] = {0.5, 0.5, 0.5, 1};
             GL11.glEnable (GL_FOG);
             GL11.glFogi (GL_FOG_MODE, GL_EXP2);
             GL11.glFogfv (GL_FOG_COLOR, fogColor);
@@ -626,8 +626,8 @@ namespace JitterOpenGLDemo
             GL11.glFogf (GL_FOG_END, 5.0);
              */
 
-            float gsize = 100.0f;
-            float offset = 0; // -0.001f; ... polygon offsetting doesn't work well
+            double gsize = 100.0f;
+            double offset = 0; // -0.001f; ... polygon offsetting doesn't work well
 
             GL.Begin(BeginMode.Quads);
             GL.Normal3(0, 0, 1.0f); // GL.Normal3(0, 0, 1) esto no funciona
@@ -647,7 +647,7 @@ namespace JitterOpenGLDemo
 
             GL.Disable(EnableCap.Fog);
         }
-        private void drawSky(float[] view_xyz)
+        private void drawSky(double[] view_xyz)
         {
             GL.Disable(EnableCap.Lighting);
             if (use_textures)
@@ -667,10 +667,10 @@ namespace JitterOpenGLDemo
             GL.DepthFunc(DepthFunction.Lequal);
             GL.DepthRange(1.0, 1.0);
 
-            float ssize = 1000.0f;
+            double ssize = 1000.0f;
 
-            float x = ssize * sky_scale;
-            float z = view_xyz[2] + sky_height;
+            double x = ssize * sky_scale;
+            double z = view_xyz[2] + sky_height;
 
             GL.Begin(BeginMode.Quads);
             GL.Normal3(0, 0, -1.0f); // GL.Normal3(0, 0, -1) esto no funciona
@@ -684,13 +684,13 @@ namespace JitterOpenGLDemo
             GL.Vertex3(ssize + view_xyz[0], -ssize + view_xyz[1], z);
             GL.End();
 
-            offset = offset + 0.001f * (float)(60.0d / RenderFrequency);
+            offset = offset + 0.001f * (double)(60.0d / RenderFrequency);
             if (offset > 1) offset -= 1;
 
             GL.DepthFunc(DepthFunction.Less);
             GL.DepthRange(0, 1.0);
         }
-        private void setCamera(float x, float y, float z, float h, float p, float r)
+        private void setCamera(double x, double y, double z, double h, double p, double r)
         {
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -793,9 +793,9 @@ namespace JitterOpenGLDemo
         }
         protected void dsSetColor(double red, double green, double blue)
         {
-            dsSetColor((float)red, (float)green, (float)blue);
+            dsSetColor((double)red, (double)green, (double)blue);
         }
-        protected void dsSetColor(float red, float green, float blue)
+        protected void dsSetColor(double red, double green, double blue)
         {
             if (current_state != 2)
                 throw new Exception("drawing function called outside simulation loop");
@@ -804,7 +804,7 @@ namespace JitterOpenGLDemo
             color[2] = blue;
             color[3] = 1;
         }
-        public void dsSetColorAlpha(float red, float green, float blue, float alpha)
+        public void dsSetColorAlpha(double red, double green, double blue, double alpha)
         {
             if (current_state != 2)
                 throw new Exception("drawing function called outside simulation loop");
@@ -825,7 +825,7 @@ namespace JitterOpenGLDemo
             angles.Z = view_hpr[2];
         }
 
-        protected void dsSetViewpoint(float[] xyz, float[] hpr)
+        protected void dsSetViewpoint(double[] xyz, double[] hpr)
         {
             if (current_state < 1)
                 Console.WriteLine("dsSetViewpoint() called before simulation started");
@@ -845,11 +845,11 @@ namespace JitterOpenGLDemo
         }
         protected void dsDrawLine(JVector _pos1, JVector _pos2)
         {
-            float[] pos1 = Conversion.ToFloat(_pos1);
-            float[] pos2 = Conversion.ToFloat(_pos2);
+            double[] pos1 = Conversion.Todouble(_pos1);
+            double[] pos2 = Conversion.Todouble(_pos2);
             dsDrawLine(pos1, pos2);
         }
-        public void dsDrawLine(float[] pos1, float[] pos2)
+        public void dsDrawLine(double[] pos1, double[] pos2)
         {
             setupDrawingMode();
             GL.Color3(color[0], color[1], color[2]);
@@ -861,13 +861,13 @@ namespace JitterOpenGLDemo
             GL.Vertex3(pos2[0], pos2[1], pos2[2]);
             GL.End();
         }
-        protected void dsDrawSphere(JVector pos, JMatrix R, float radius)
+        protected void dsDrawSphere(JVector pos, JMatrix R, double radius)
         {
-            float[] pos2 = Conversion.ToFloat(pos);
-            float[] R2 = Conversion.ToFloat(R);
+            double[] pos2 = Conversion.Todouble(pos);
+            double[] R2 = Conversion.Todouble(R);
             dsDrawSphere(pos2, R2, radius);
         }
-        protected void dsDrawSphere(float[] pos, float[] R, float radius)
+        protected void dsDrawSphere(double[] pos, double[] R, double radius)
         {
             if (current_state != 2)
                 Console.WriteLine("drawing function called outside simulation loop");
@@ -904,7 +904,7 @@ namespace JitterOpenGLDemo
                 drawSphereShadow(pos[0], pos[1], pos[2], radius);
             }
         }
-        protected void dsDrawTriangle(JVector pos, JMatrix R, float[] vAll, int v0, int v1,
+        protected void dsDrawTriangle(JVector pos, JMatrix R, double[] vAll, int v0, int v1,
                                        int v2, bool solid)
         {
             if (current_state != 2)
@@ -928,13 +928,13 @@ namespace JitterOpenGLDemo
         private void drawTriangle(JVector v0, JVector v1,
                                    JVector v2, bool solid)
         {
-            float[] u = new float[3], v = new float[3], normal = new float[3];
-            u[0] = (float)(v1.X - v0.X);
-            u[1] = (float)(v1.Y - v0.Y);
-            u[2] = (float)(v1.Z - v0.Z);
-            v[0] = (float)(v2.X - v0.X);
-            v[1] = (float)(v2.Y - v0.Y);
-            v[2] = (float)(v2.Z - v0.Z);
+            double[] u = new double[3], v = new double[3], normal = new double[3];
+            u[0] = (double)(v1.X - v0.X);
+            u[1] = (double)(v1.Y - v0.Y);
+            u[2] = (double)(v1.Z - v0.Z);
+            v[0] = (double)(v2.X - v0.X);
+            v[1] = (double)(v2.Y - v0.Y);
+            v[2] = (double)(v2.Z - v0.Z);
 
             //OdeMath.dCROSS(normal, CsODE.OP.EQ, u, v);
             normal[0] = u[1] * v[2] - u[2] - v[1];
@@ -950,9 +950,9 @@ namespace JitterOpenGLDemo
             GL.Vertex3(v2.X, v2.Y, v2.Z);
             GL.End();
         }
-        private void drawTriangle(float[] vAll, int v0, int v1, int v2, bool solid)
+        private void drawTriangle(double[] vAll, int v0, int v1, int v2, bool solid)
         {
-            float[] u = new float[3], v = new float[3], normal = new float[3];
+            double[] u = new double[3], v = new double[3], normal = new double[3];
             u[0] = vAll[v1] - vAll[v0];
             u[1] = vAll[v1 + 1] - vAll[v0 + 1];
             u[2] = vAll[v1 + 2] - vAll[v0 + 2];
@@ -975,7 +975,7 @@ namespace JitterOpenGLDemo
             /** *= */
             MUL_EQ, /** -= */ SUB_EQ
         }
-        static void dCROSS(float[] a, OP op, float[] b, float[] c)
+        static void dCROSS(double[] a, OP op, double[] b, double[] c)
         {
             if (op == OP.EQ)
             {
@@ -1024,15 +1024,15 @@ namespace JitterOpenGLDemo
             GL.MultMatrix(matrix);
         }
         private static bool init = false;
-        private static float len2, len1, scale;
-        private void drawSphereShadow(float px, float py, float pz, float radius)
+        private static double len2, len1, scale;
+        private void drawSphereShadow(double px, double py, double pz, double radius)
         {
             // calculate shadow constants based on light vector
             if (!init)
             {
                 len2 = LIGHTX * LIGHTX + LIGHTY * LIGHTY;
-                len1 = 1.0f / (float)Math.Sqrt(len2);
-                scale = (float)Math.Sqrt(len2 + 1);
+                len1 = 1.0f / (double)Math.Sqrt(len2);
+                scale = (double)Math.Sqrt(len2 + 1);
                 init = true;
             }
 
@@ -1040,43 +1040,43 @@ namespace JitterOpenGLDemo
             px -= LIGHTX * pz;
             py -= LIGHTY * pz;
 
-            float kx = 0.96592582628907f;
-            float ky = 0.25881904510252f;
-            float x = radius, y = 0;
+            double kx = 0.96592582628907f;
+            double ky = 0.25881904510252f;
+            double x = radius, y = 0;
 
             GL.Begin(BeginMode.TriangleFan);
             for (int i = 0; i < 24; i++)
             {
                 // for all points on circle, scale to elongated rotated shadow and draw
-                float x2 = (LIGHTX * x * scale - LIGHTY * y) * len1 + px;
-                float y2 = (LIGHTY * x * scale + LIGHTX * y) * len1 + py;
+                double x2 = (LIGHTX * x * scale - LIGHTY * y) * len1 + px;
+                double y2 = (LIGHTY * x * scale + LIGHTX * y) * len1 + py;
                 GL.TexCoord2(x2 * ground_scale + ground_ofsx, y2 * ground_scale + ground_ofsy);
                 GL.Vertex3(x2, y2, 0);
 
                 // rotate [x,y] vector
-                float xtmp = kx * x - ky * y;
+                double xtmp = kx * x - ky * y;
                 y = ky * x + kx * y;
                 x = xtmp;
             }
             GL.End();
         }
         private static int listnum = 0; //GLunint TZ
-        private const float ICX = 0.525731112119133606f;
-        private const float ICZ = 0.850650808352039932f;
-        private readonly float[][] idata = new float[][]
+        private const double ICX = 0.525731112119133606f;
+        private const double ICZ = 0.850650808352039932f;
+        private readonly double[][] idata = new double[][]
         {
-		    new float[]{-ICX, 0, ICZ},
-		    new float[]{ICX, 0, ICZ},
-		    new float[]{-ICX, 0, -ICZ},
-		    new float[]{ICX, 0, -ICZ},
-		    new float[]{0, ICZ, ICX},
-		    new float[]{0, ICZ, -ICX},
-		    new float[]{0, -ICZ, ICX},
-		    new float[]{0, -ICZ, -ICX},
-		    new float[]{ICZ, ICX, 0},
-		    new float[]{-ICZ, ICX, 0},
-		    new float[]{ICZ, -ICX, 0},
-		    new float[]{-ICZ, -ICX, 0}
+		    new double[]{-ICX, 0, ICZ},
+		    new double[]{ICX, 0, ICZ},
+		    new double[]{-ICX, 0, -ICZ},
+		    new double[]{ICX, 0, -ICZ},
+		    new double[]{0, ICZ, ICX},
+		    new double[]{0, ICZ, -ICX},
+		    new double[]{0, -ICZ, ICX},
+		    new double[]{0, -ICZ, -ICX},
+		    new double[]{ICZ, ICX, 0},
+		    new double[]{-ICZ, ICX, 0},
+		    new double[]{ICZ, -ICX, 0},
+		    new double[]{-ICZ, -ICX, 0}
 	    };
         private readonly int[][] index = new int[][]
         {
@@ -1121,22 +1121,22 @@ namespace JitterOpenGLDemo
         // to be already normalized). Note this is not super-fast because it draws
         // triangles rather than triangle strips.
 
-        //	static void drawPatch (float p1[3], float p2[3], float p3[3], int level)
-        private void drawPatch(float[] p1, float[] p2, float[] p3, int level)
+        //	static void drawPatch (double p1[3], double p2[3], double p3[3], int level)
+        private void drawPatch(double[] p1, double[] p2, double[] p3, int level)
         {
             int i;
             if (level > 0)
             {
-                float[] q1 = new float[3], q2 = new float[3], q3 = new float[3];		 // sub-vertices
+                double[] q1 = new double[3], q2 = new double[3], q3 = new double[3];		 // sub-vertices
                 for (i = 0; i < 3; i++)
                 {
                     q1[i] = 0.5f * (p1[i] + p2[i]);
                     q2[i] = 0.5f * (p2[i] + p3[i]);
                     q3[i] = 0.5f * (p3[i] + p1[i]);
                 }
-                float length1 = (float)(1.0 / Math.Sqrt(q1[0] * q1[0] + q1[1] * q1[1] + q1[2] * q1[2]));
-                float length2 = (float)(1.0 / Math.Sqrt(q2[0] * q2[0] + q2[1] * q2[1] + q2[2] * q2[2]));
-                float length3 = (float)(1.0 / Math.Sqrt(q3[0] * q3[0] + q3[1] * q3[1] + q3[2] * q3[2]));
+                double length1 = (double)(1.0 / Math.Sqrt(q1[0] * q1[0] + q1[1] * q1[1] + q1[2] * q1[2]));
+                double length2 = (double)(1.0 / Math.Sqrt(q2[0] * q2[0] + q2[1] * q2[1] + q2[2] * q2[2]));
+                double length3 = (double)(1.0 / Math.Sqrt(q3[0] * q3[0] + q3[1] * q3[1] + q3[2] * q3[2]));
                 for (i = 0; i < 3; i++)
                 {
                     q1[i] *= length1;
@@ -1209,14 +1209,14 @@ namespace JitterOpenGLDemo
             }
         }
         protected void dsDrawCapsule(JVector pos, JMatrix R,
-            float length, float radius)
+            double length, double radius)
         {
-            float[] pos2 = Conversion.ToFloat(pos);
-            float[] R2 = Conversion.ToFloat(R);
+            double[] pos2 = Conversion.Todouble(pos);
+            double[] R2 = Conversion.Todouble(R);
             dsDrawCapsule(pos2, R2, length, radius);
         }
-        protected void dsDrawCapsule(float[] pos, float[] R,
-            float length, float radius)
+        protected void dsDrawCapsule(double[] pos, double[] R,
+            double length, double radius)
         {
             if (current_state != 2)
                 throw new Exception("drawing function called outside simulation loop");
@@ -1239,17 +1239,17 @@ namespace JitterOpenGLDemo
         }
         private int capped_cylinder_quality = 3;
 
-        private void drawCapsule(float l, float r)
+        private void drawCapsule(double l, double r)
         {
             int i, j;
-            float tmp, nx, ny, nz, start_nx, start_ny, a, ca, sa;
+            double tmp, nx, ny, nz, start_nx, start_ny, a, ca, sa;
             // number of sides to the cylinder (divisible by 4):
             int n = capped_cylinder_quality * 4;
 
             l *= 0.5f;
-            a = (float)((M_PI * 2.0) / (float)n);
-            sa = (float)Math.Sin(a);
-            ca = (float)Math.Cos(a);
+            a = (double)((M_PI * 2.0) / (double)n);
+            sa = (double)Math.Sin(a);
+            ca = (double)Math.Cos(a);
 
             // draw cylinder body
             ny = 1; nz = 0;		  // normal vector = (0,ny,nz)
@@ -1273,11 +1273,11 @@ namespace JitterOpenGLDemo
             for (j = 0; j < (n / 4); j++)
             {
                 // get start_n2 = rotated start_n
-                float start_nx2 = ca * start_nx + sa * start_ny;
-                float start_ny2 = -sa * start_nx + ca * start_ny;
+                double start_nx2 = ca * start_nx + sa * start_ny;
+                double start_ny2 = -sa * start_nx + ca * start_ny;
                 // get n=start_n and n2=start_n2
                 nx = start_nx; ny = start_ny; nz = 0;
-                float nx2 = start_nx2, ny2 = start_ny2, nz2 = 0;
+                double nx2 = start_nx2, ny2 = start_ny2, nz2 = 0;
                 GL.Begin(BeginMode.TriangleStrip);
                 for (i = 0; i <= n; i++)
                 {
@@ -1304,11 +1304,11 @@ namespace JitterOpenGLDemo
             for (j = 0; j < (n / 4); j++)
             {
                 // get start_n2 = rotated start_n
-                float start_nx2 = ca * start_nx - sa * start_ny;
-                float start_ny2 = sa * start_nx + ca * start_ny;
+                double start_nx2 = ca * start_nx - sa * start_ny;
+                double start_ny2 = sa * start_nx + ca * start_ny;
                 // get n=start_n and n2=start_n2
                 nx = start_nx; ny = start_ny; nz = 0;
-                float nx2 = start_nx2, ny2 = start_ny2, nz2 = 0;
+                double nx2 = start_nx2, ny2 = start_ny2, nz2 = 0;
                 GL.Begin(BeginMode.TriangleStrip);
                 for (i = 0; i <= n; i++)
                 {
@@ -1329,14 +1329,14 @@ namespace JitterOpenGLDemo
                 start_ny = start_ny2;
             }
         }
-        protected void dsDrawCylinder(JVector pos, JMatrix R, float length, float radius)
+        protected void dsDrawCylinder(JVector pos, JMatrix R, double length, double radius)
         {
-            float[] pos2 = Conversion.ToFloat(pos);
-            float[] R2 = Conversion.ToFloat(R);
+            double[] pos2 = Conversion.Todouble(pos);
+            double[] R2 = Conversion.Todouble(R);
             dsDrawCylinder(pos2, R2, length, radius);
         }
 
-        public void dsDrawCylinder(float[] pos, float[] R, float length, float radius)
+        public void dsDrawCylinder(double[] pos, double[] R, double length, double radius)
         {
             if (current_state != 2)
                 Console.WriteLine("drawing function called outside simulation loop");
@@ -1357,16 +1357,16 @@ namespace JitterOpenGLDemo
                 GL.PopMatrix();
             }
         }
-        void drawCylinder(float l, float r, float zoffset)
+        void drawCylinder(double l, double r, double zoffset)
         {
             int i;
-            float tmp, ny, nz, a, ca, sa;
+            double tmp, ny, nz, a, ca, sa;
             int n = 24;	// number of sides to the cylinder (divisible by 4)
 
             l *= 0.5f;
-            a = (float)(M_PI * 2.0 / (float)n);
-            sa = (float)Math.Sin(a);
-            ca = (float)Math.Cos(a);
+            a = (double)(M_PI * 2.0 / (double)n);
+            sa = (double)Math.Sin(a);
+            ca = (double)Math.Cos(a);
 
             // draw cylinder body
             ny = 1; nz = 0;		  // normal vector = (0,ny,nz)
@@ -1427,11 +1427,11 @@ namespace JitterOpenGLDemo
             }
             GL.End();
         }
-        private void drawBox(float[] sides)
+        private void drawBox(double[] sides)
         {
-            float lx = sides[0] * 0.5f;
-            float ly = sides[1] * 0.5f;
-            float lz = sides[2] * 0.5f;
+            double lx = sides[0] * 0.5f;
+            double ly = sides[1] * 0.5f;
+            double lz = sides[2] * 0.5f;
 
             // sides
             GL.Begin(BeginMode.TriangleStrip);
@@ -1471,12 +1471,12 @@ namespace JitterOpenGLDemo
         }
         protected void dsDrawBox(JVector pos, JMatrix R, JVector sides)
         {
-            float[] pos2 = Conversion.ToFloat(pos);
-            float[] R2 = Conversion.ToFloat(R);
-            float[] fsides = Conversion.ToFloat(sides);
+            double[] pos2 = Conversion.Todouble(pos);
+            double[] R2 = Conversion.Todouble(R);
+            double[] fsides = Conversion.Todouble(sides);
             dsDrawBox(pos2, R2, fsides);
         }
-        protected void dsDrawBox(float[] pos, float[] R, float[] sides)
+        protected void dsDrawBox(double[] pos, double[] R, double[] sides)
         {
             if (current_state != 2)
                 throw new Exception("drawing function called outside simulation loop");
@@ -1510,8 +1510,8 @@ namespace JitterOpenGLDemo
                 GL.Enable(EnableCap.TextureGenT);
                 GL.TexGen(TextureCoordName.S, TextureGenParameter.TextureGenMode, (int)All.EyeLinear);
                 GL.TexGen(TextureCoordName.T, TextureGenParameter.TextureGenMode, (int)All.EyeLinear);
-                //			static GLfloat s_params[4] = {ground_scale,0,0,ground_ofsx};
-                //			static GLfloat t_params[4] = {0,ground_scale,0,ground_ofsy};
+                //			static GLdouble s_params[4] = {ground_scale,0,0,ground_ofsx};
+                //			static GLdouble t_params[4] = {0,ground_scale,0,ground_ofsy};
                 GL.TexGen(TextureCoordName.S, TextureGenParameter.EyePlane, s_params_SSDM);
                 GL.TexGen(TextureCoordName.T, TextureGenParameter.EyePlane, t_params_SSDM);
             }
@@ -1524,8 +1524,8 @@ namespace JitterOpenGLDemo
         }
         private void setShadowTransform()
         {
-            //GLfloat
-            float[] matrix = new float[16];
+            //GLdouble
+            double[] matrix = new double[16];
             for (int i = 0; i < 16; i++) matrix[i] = 0;
             matrix[0] = 1.0f;
             matrix[5] = 1.0f;
@@ -1575,21 +1575,21 @@ namespace JitterOpenGLDemo
             }
         }
 
-        private void setColor(float r, float g, float b, float alpha)
+        private void setColor(double r, double g, double b, double alpha)
         {
-            light_ambient2 = new float[] { r * 0.3f, g * 0.3f, b * 0.3f, alpha };
-            light_diffuse2 = new float[] { r * 0.7f, g * 0.7f, b * 0.7f, alpha };
-            light_specular2 = new float[] { r * 0.2f, g * 0.2f, b * 0.2f, alpha };
+            light_ambient2 = new double[] { r * 0.3f, g * 0.3f, b * 0.3f, alpha };
+            light_diffuse2 = new double[] { r * 0.7f, g * 0.7f, b * 0.7f, alpha };
+            light_specular2 = new double[] { r * 0.2f, g * 0.2f, b * 0.2f, alpha };
 
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, light_ambient2);
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, light_diffuse2);
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, light_specular2);
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, 5.0f);
         }
-        private void setTransform(float[] pos, float[] R)
+        private void setTransform(double[] pos, double[] R)
         {
-            //GLfloat
-            float[] matrix = new float[16];
+            //GLdouble
+            double[] matrix = new double[16];
             matrix[0] = R[0];
             matrix[1] = R[4];
             matrix[2] = R[8];

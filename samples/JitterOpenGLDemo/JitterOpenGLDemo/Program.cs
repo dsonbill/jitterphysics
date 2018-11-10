@@ -69,9 +69,9 @@ namespace JitterOpenGLDemo
             body.Position = pos;
 
             JVector unit;
-            unit.X = (float)Math.Cos(ang.X / 180.0f * JMath.Pi);
-            unit.Y = (float)Math.Sin(ang.X / 180.0f * JMath.Pi);
-            unit.Z = (float)Math.Sin(ang.Y / 180.0f * JMath.Pi);
+            unit.X = (double)Math.Cos(ang.X / 180.0f * JMath.Pi);
+            unit.Y = (double)Math.Sin(ang.X / 180.0f * JMath.Pi);
+            unit.Z = (double)Math.Sin(ang.Y / 180.0f * JMath.Pi);
 
             body.LinearVelocity = unit * 50.0f;
 
@@ -94,7 +94,7 @@ namespace JitterOpenGLDemo
         {
             if (initFrame)
             {
-                dsSetViewpoint(new float[] { 18, 10, 8 }, new float[] { 190, -10, 0 });
+                dsSetViewpoint(new double[] { 18, 10, 8 }, new double[] { 190, -10, 0 });
                 initFrame = false;
             }
 
@@ -132,11 +132,11 @@ namespace JitterOpenGLDemo
             }
         }
 
-        float accTime = 0.0f;
+        double accTime = 0.0f;
 
         protected override void OnUpdateFrame(OpenTK.FrameEventArgs e)
         {
-            accTime += 1.0f / (float)RenderFrequency;
+            accTime += 1.0f / (double)RenderFrequency;
 
             if (accTime > 1.0f)
             {
@@ -144,7 +144,7 @@ namespace JitterOpenGLDemo
                 accTime = 0.0f;
             }
 
-            float step = 1.0f / (float)RenderFrequency;
+            double step = 1.0f / (double)RenderFrequency;
             if (step > 1.0f / 100.0f) step = 1.0f / 100.0f;
             world.Step(step, true);
 
